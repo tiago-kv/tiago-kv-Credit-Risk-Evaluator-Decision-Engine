@@ -99,25 +99,23 @@ def get_risk_tier(probability: float) -> Dict[str, str]:
         }
 
 
+# Garante o caminho absoluto para a raiz do repositório no Streamlit Cloud
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+
 class RiskEvaluator:
     """Production credit risk evaluator wrapping preprocessor, model, and SHAP explainer."""
 
     def __init__(
         self,
-        model_path: str = "models/best_model.joblib",
-        preprocessor_path: str = "models/preprocessor.joblib",
-        feature_names_path: str = "models/feature_names.json",
+        model_path: Optional[str] = None,
+        preprocessor_path: Optional[str] = None,
+        feature_names_path: Optional[str] = None,
     ) -> None:
-        """Initialize the evaluator and load artifacts.
-
-        Args:
-            model_path: Path to serialized trained model.
-            preprocessor_path: Path to serialized Scikit-Learn preprocessor.
-            feature_names_path: Path to feature names JSON metadata.
-        """
-        self.model_path = model_path
-        self.preprocessor_path = preprocessor_path
-        self.feature_names_path = feature_names_path
+        """Initialize the evaluator and load artifacts."""
+        self.model_path = model_path or os.path.join(BASE_DIR, "models", "best_model.joblib")
+        self.preprocessor_path = preprocessor_path or os.path.join(BASE_DIR, "models", "preprocessor.joblib")
+        self.feature_names_path = feature_names_path or os.path.join(BASE_DIR, "models", "feature_names.json")
 
         self.model = None
         self.preprocessor = None
